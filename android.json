@@ -1,0 +1,5 @@
+{
+    "android_icon": "/res/icon/installer-skill.png",
+    "android_name": "Skill Installer",
+    "android_handler": "skillinstallermobile.aiix.home"
+}
