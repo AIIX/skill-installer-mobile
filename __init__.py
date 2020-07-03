@@ -76,7 +76,7 @@ class SkillInstallerMobile(MycroftSkill):
     def build_skill_list(self): 
         skillModel = {}
         skillListModel = []
-        pling_categories_url = "https://api.kde-look.org/ocs/v1/content/data?categories=608"
+        pling_categories_url = "https://api.kde-look.org/ocs/v1/content/data?categories=608&pagesize=100"
         getSkillCategories = requests.get(pling_categories_url)
         parseCategories = xmltodict.parse(getSkillCategories.text)
         skillInformation = parseCategories['ocs']['data']['content']
