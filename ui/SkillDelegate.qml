@@ -23,6 +23,18 @@ import org.kde.kirigami 2.8 as Kirigami
 import Mycroft 1.0 as Mycroft 
 
 Kirigami.AbstractCard {
+    
+    background: Rectangle {
+        color: Kirigami.Theme.backgroundColor
+        radius: 3
+        layer.enabled: true
+        layer.effect: DropShadow {
+            transparentBorder: true
+            horizontalOffset: 0
+            verticalOffset: 2
+        }
+    }
+    
     contentItem: Item {
         implicitWidth: parent.width
         implicitHeight: skillImage.height
@@ -36,16 +48,28 @@ Kirigami.AbstractCard {
             source: modelData.skillImage
         }
         
-        Label {
-            id: skillNameLabel
+        ColumnLayout {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: skillImage.right
             anchors.leftMargin: Kirigami.Units.largeSpacing
             anchors.right: btnRect.left
             anchors.margins: 12
-            text: modelData.skillName
-            font.pointSize: 10
-            color: Kirigami.Theme.textColor
+            
+            Kirigami.Heading {
+                id: skillNameLabel
+                text: modelData.skillName
+                level: 2
+                color: Kirigami.Theme.textColor
+            }
+            
+            Label {
+                id: skillDescriptionLabel
+                text: "Try saying: " + modelData.skillExamples[0]
+                wrapMode: Text.WordWrap
+                Layout.maximumWidth: parent.width
+                maximumLineCount: 2
+                color: Kirigami.Theme.textColor
+            }
         }
         
         Button {
@@ -54,7 +78,12 @@ Kirigami.AbstractCard {
             anchors.verticalCenter: parent.verticalCenter
             width: Kirigami.Units.gridUnit * 3
             height: width
+            flat: true
             Kirigami.Theme.colorSet: Kirigami.Theme.Button
+            
+            background: Rectangle {
+                color: "transparent"
+            }
             
             contentItem: Item {
                 Image {
@@ -67,9 +96,9 @@ Kirigami.AbstractCard {
             
             onClicked: {
                 if(!modelData.skillInstalled) {
-                    triggerGuiEvent("skillinstallermobile.aiix.install", {"downloadLink": modelData.skillUrl, "branch": modelData.skillBranch})
+                    triggerGuiEvent("skillinstallermobile.aiix.install", modelData)
                 } else {
-                    triggerGuiEvent("skillinstallermobile.aiix.remove", {"downloadLink": modelData.skillUrl, "branch": modelData.skillBranch})
+                    triggerGuiEvent("skillinstallermobile.aiix.remove", modelData)
                 }
             }
         }

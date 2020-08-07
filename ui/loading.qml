@@ -6,13 +6,17 @@ import Mycroft 1.0 as Mycroft
 
 Mycroft.Delegate {
     id: logoLoadingPage
+    leftPadding: 0
+    rightPadding: 0
+    topPadding: 0
+    bottomPadding: 0
 
     Control {
         id: statusArea
         anchors.fill: parent
         
         background: Image {
-            source: Qt.resolvedUrl("images/background-logo.jpg")
+            source: Qt.resolvedUrl("images/background.jpg")
         }
         
         contentItem: Item {

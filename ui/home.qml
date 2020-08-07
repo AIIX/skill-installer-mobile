@@ -23,7 +23,7 @@ import org.kde.kirigami 2.8 as Kirigami
 import Mycroft 1.0 as Mycroft 
 
 Mycroft.Delegate {
-    id: root
+    id: delegateSkillInstaller
     
     fillWidth: true
     
@@ -32,7 +32,6 @@ Mycroft.Delegate {
     topPadding: 0
     bottomPadding: 0
     
-    skillBackgroundSource: Qt.resolvedUrl("images/background.jpg")
     property var skillsModel: sessionData.skillModel
     property bool busyIndicate: sessionData.process
     property var processMessage: sessionData.processMessage
@@ -58,59 +57,58 @@ Mycroft.Delegate {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.leftMargin: -1
-        anchors.rightMargin: -1
-        anchors.topMargin: -1
-        height: Kirigami.Units.gridUnit * 3
-        color: Kirigami.Theme.backgroundColor
+        height: Kirigami.Units.gridUnit * 2
+        color: "#303030"
+        layer.enabled: true
+        layer.effect: DropShadow {
+            transparentBorder: true
+            horizontalOffset: 0
+            verticalOffset: 2
+        }
         
-        Button {
-            id: btnBack
-            anchors.left: parent.left
+        RowLayout {
+            width: parent.width
+            height: parent.height
             anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: Kirigami.Units.largeSpacing
-            width: Kirigami.Units.iconSizes.large
-            height: width
-            Kirigami.Theme.colorSet: Kirigami.Theme.Button
             
-            contentItem: Item {
-                Image {
+            ToolButton {
+                Kirigami.Theme.colorSet: Kirigami.Theme.Button
+                Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
+                Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
+                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                flat: true
+                
+                contentItem: Image {
                     anchors.centerIn: parent
-                    width: Kirigami.Units.iconSizes.medium
-                    height: Kirigami.Units.iconSizes.medium
-                    source: Qt.resolvedUrl("images/back.png")
+                    width: Kirigami.Units.iconSizes.smallMedium
+                    height: Kirigami.Units.iconSizes.smallMedium
+                    source: "back.png"
+                }
+                
+                onClicked: {
+                    delegateSkillInstaller.parent.backRequested()
                 }
             }
             
-            onClicked: {
-                Mycroft.MycroftController.sendRequest("mycroft.gui.screen.close", {})
+            Kirigami.Heading {
+                id: headingLabel
+                level: 2
+                text: "Mycroft Skill Installer"
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignHCenter
             }
         }
-        
-        Kirigami.Heading {
-            anchors.centerIn: parent
-            level: 2
-            text: "Mycroft Skill Installer"
-        }
     }
-    
-    Kirigami.Separator {
-        id: headerSept
-        anchors.top: headerBar.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 1
-        color: Kirigami.Theme.linkColor
-    }
-    
+
     Kirigami.CardsListView {
         id: skillModelView
-        anchors.top: headerSept.bottom
+        anchors.top: headerBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         clip: true
         model: skillsModel.contents
+        spacing: Kirigami.Units.smallSpacing
         delegate: SkillDelegate{}
     }
     
