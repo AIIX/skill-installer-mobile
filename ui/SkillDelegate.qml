@@ -45,7 +45,7 @@ Kirigami.AbstractCard {
             anchors.verticalCenter: parent.verticalCenter
             height: Kirigami.Units.gridUnit * 3.5
             width: Kirigami.Units.gridUnit * 3.5
-            source: modelData.skillImage
+            source: modelData.skillimage
         }
         
         ColumnLayout {
@@ -57,14 +57,17 @@ Kirigami.AbstractCard {
             
             Kirigami.Heading {
                 id: skillNameLabel
-                text: modelData.skillName
+                text: modelData.skillname
+                wrapMode: Text.WordWrap
+                Layout.maximumWidth: parent.width
+                maximumLineCount: 2
                 level: 3
                 color: Kirigami.Theme.textColor
             }
             
             Label {
                 id: skillDescriptionLabel
-                text: "Try saying: " + modelData.skillExamples[0]
+                text: "Try saying: " + modelData.skillexamples[0]
                 wrapMode: Text.WordWrap
                 Layout.maximumWidth: parent.width
                 maximumLineCount: 2
@@ -90,7 +93,7 @@ Kirigami.AbstractCard {
                     anchors.centerIn: parent
                     width: Kirigami.Units.iconSizes.smallMedium
                     height: Kirigami.Units.iconSizes.smallMedium
-                    source: modelData.skillInstalled ? "images/remove.png" : "images/down.png"
+                    source: modelData.skillinstalled ? "images/remove.png" : "images/down.png"
                 }
             }
             
