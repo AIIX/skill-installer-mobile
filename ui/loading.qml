@@ -16,7 +16,7 @@ Mycroft.Delegate {
         anchors.fill: parent
         
         background: Image {
-            source: Qt.resolvedUrl("images/background.jpg")
+            source: Qt.resolvedUrl("images/background.png")
         }
         
         contentItem: Item {
