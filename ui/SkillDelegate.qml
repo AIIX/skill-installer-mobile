@@ -58,7 +58,7 @@ Kirigami.AbstractCard {
             Kirigami.Heading {
                 id: skillNameLabel
                 text: modelData.skillName
-                level: 2
+                level: 3
                 color: Kirigami.Theme.textColor
             }
             
@@ -88,8 +88,8 @@ Kirigami.AbstractCard {
             contentItem: Item {
                 Image {
                     anchors.centerIn: parent
-                    width: Kirigami.Units.iconSizes.large
-                    height: Kirigami.Units.iconSizes.large
+                    width: Kirigami.Units.iconSizes.smallMedium
+                    height: Kirigami.Units.iconSizes.smallMedium
                     source: modelData.skillInstalled ? "images/remove.png" : "images/down.png"
                 }
             }
