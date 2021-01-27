@@ -93,16 +93,12 @@ Kirigami.AbstractCard {
                     anchors.centerIn: parent
                     width: Kirigami.Units.iconSizes.smallMedium
                     height: Kirigami.Units.iconSizes.smallMedium
-                    source: modelData.skillinstalled ? "images/remove.png" : "images/down.png"
+                    source: "images/down.png"
                 }
             }
             
             onClicked: {
-                if(!modelData.skillInstalled) {
-                    triggerGuiEvent("skillinstallermobile.aiix.install", modelData)
-                } else {
-                    triggerGuiEvent("skillinstallermobile.aiix.remove", modelData)
-                }
+                triggerGuiEvent("skillinstallermobile.aiix.install", modelData)
             }
         }
     }

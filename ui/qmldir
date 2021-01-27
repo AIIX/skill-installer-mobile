@@ -1,3 +1,5 @@
-home 1.0 home.qml 
+home 1.0 home.qml
 loading 1.0 loading.qml
-SkillDelegate 1.0 SkillDelegate.qml
+PaneItem 1.0 PaneItem.qml
+SkillDelegateInstalled 1.0 SkillDelegateInstalled.qml
+SkillDelegateAvailable 1.0 SkillDelegateAvailable.qml

@@ -23,7 +23,11 @@ class SkillInstallerMobile(MycroftSkill):
     def __init__(self):
         super().__init__('SkillInstallerMobile')
         self.apps_white_list = ['youtube-skill.aiix', 'soundcloud-audio-player.aiix', 'skill-wikidata.aiix',
-                                'bitchute-skill.aiix', 'skystream.aiix', 'twitch-streams.aiix']
+                                'bitchute-skill.aiix', 'skystream.aiix', 'twitch-streams.aiix', 'food-wizard.aiix']
+        self.apps_white_list_id = ["1336153", "1346946", "1362744", "1389861", "1392895", "1444313", "1336547", "1399481"]
+        self.skillInformation = {}
+        self.skillInstalledListModel = []
+        self.skillAvailableListModel = []
         self.skillInformation = {}
         self.skilllistmodel = []
         self.threads = []
@@ -56,34 +60,43 @@ class SkillInstallerMobile(MycroftSkill):
         LOG.info(skill_model)
         self.gui['process'] = False
         self.gui['processMessage'] = ""
-        self.gui['skillModel'] = skill_model
+        self.gui["skillInstalledModel"] = skill_model[0]
+        self.gui["skillAvailableModel"] = skill_model[1]
         self.gui.show_page("home.qml", override_idle=True)
         
     def update_home_screen(self):
         self.gui['processMessage'] = "Updating List"
         skill_model = self.build_skill_list()
-        self.gui['skillModel'] = skill_model
+        self.gui["skillInstalledModel"] = skill_model[0]
+        self.gui["skillAvailableModel"] = skill_model[1]
         self.gui.show_page("home.qml", override_idle=True)
         self.gui['process'] = False
 
     def build_skill_list(self):
-        skillmodel = {}
-        self.skilllistmodel.clear()
+        skillInstalledModel = {}
+        skillAvailableModel = {}
+        self.skillInstalledListModel.clear()
+        self.skillAvailableListModel.clear()
         pling_categories_url = "https://api.kde-look.org/ocs/v1/content/data?categories=608&pagesize=100"
         getskillcategories = requests.get(pling_categories_url)
         parsecategories = xmltodict.parse(getskillcategories.text)
         skillinformation = parsecategories['ocs']['data']['content']
         for contents in skillinformation:
-            skilljsonurl = contents['downloadlink1']
-            t = threading.Thread(target=self.build_pling_list, args=(skilljsonurl, contents,))
-            self.threads.append(t)
-            t.start()
+            if contents["id"] not in self.apps_white_list_id:
+                LOG.info("blacklisted skill")
+            else:
+                skilljsonurl = contents['downloadlink1']
+                t = threading.Thread(target=self.build_pling_list, args=(skilljsonurl, contents,))
+                self.threads.append(t)
+                t.start()
 
         for t in self.threads:
             t.join()
-
-        skillmodel["contents"] = self.skilllistmodel
-        return skillmodel
+            
+        skillInstalledModel["contents"] = self.skillInstalledListModel
+        skillAvailableModel["contents"] = self.skillAvailableListModel
+        skillModel = [skillInstalledModel, skillAvailableModel]
+        return skillModel
 
     def build_pling_list(self, url, contents):
         getskilljson = requests.get(url)
@@ -98,7 +111,13 @@ class SkillInstallerMobile(MycroftSkill):
                           "category": contents['typename'], "skilldescription": contents["description"],
                           "skillid": contents["id"], "skillexamples": getskillinfo["examples"],
                           "skillinstalled": isskillinstalled}
-            self.skilllistmodel.append(skillblock)
+            
+            if isskillinstalled:
+                if not any(d['skillid'] == contents["id"] for d in self.skillInstalledListModel):
+                    self.skillInstalledListModel.append(skillblock)
+            else:
+                if not any(d['skillid'] == contents["id"] for d in self.skillAvailableListModel):
+                    self.skillAvailableListModel.append(skillblock)
 
     def install_from_giturl(self, message):
         git_link = message.data["skillurl"]
@@ -126,12 +145,12 @@ class SkillInstallerMobile(MycroftSkill):
             repo_name = SkillEntry.extract_repo_name(git_link)
             repo_author = SkillEntry.extract_author(git_link)
             skill_path = "/opt/mycroft/skills/" + repo_name + "." + repo_author.lower()
-            process = subprocess.popen(["git", "checkout", git_branch], stdout=subprocess.pipe, cwd=skill_path)
+            process = subprocess.Popen(["git", "checkout", git_branch], stdout=subprocess.PIPE, cwd=skill_path)
             output = process.communicate()[0]
             LOG.info(output)
     
     def uninstall_from_giturl(self, message):
-        git_link = message.data["skillUrl"]
+        git_link = message.data["skillurl"]
         if git_link:
             repo_name = SkillEntry.extract_repo_name(git_link)
             try:

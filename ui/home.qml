@@ -32,12 +32,17 @@ Mycroft.Delegate {
     topPadding: 0
     bottomPadding: 0
     
-    property var skillsModel: sessionData.skillModel
+    property var skillsInstalledModel: sessionData.skillInstalledModel
+    property var skillsAvailableModel: sessionData.skillAvailableModel
     property bool busyIndicate: sessionData.process
     property var processMessage: sessionData.processMessage
     
-    onSkillsModelChanged: {
-        skillModelView.forceLayout();
+    onSkillsInstalledModelChanged: {
+        skillInstalledModelView.forceLayout();
+    }
+    
+    onSkillsAvailableModelChanged: {
+        skillAvailableModelView.forceLayout();
     }
     
     onBusyIndicateChanged: {
@@ -99,17 +104,57 @@ Mycroft.Delegate {
             }
         }
     }
-
-    Kirigami.CardsListView {
-        id: skillModelView
+    
+    ColumnLayout {
         anchors.top: headerBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        clip: true
-        model: skillsModel.contents
-        spacing: Kirigami.Units.smallSpacing
-        delegate: SkillDelegate{}
+
+        PaneItem {
+            id: p1
+            Layout.preferredHeight: Kirigami.Units.gridUnit * 2
+            Layout.alignment: Qt.AlignTop
+            title: "Installed Skills " + "(" + skillInstalledModelView.count + ")"
+            
+            onCurrentChanged: {
+                if(!current){
+                    p2.current = true
+                }
+            }
+            
+            Kirigami.CardsListView {
+                id: skillInstalledModelView
+                anchors.fill: parent
+                clip: true
+                model: skillsInstalledModel.contents
+                spacing: Kirigami.Units.smallSpacing
+                delegate: SkillDelegateInstalled{}
+            }
+        }
+        
+        PaneItem {
+            id: p2
+            Layout.preferredHeight: Kirigami.Units.gridUnit * 2
+            Layout.alignment: Qt.AlignTop
+            title: "Available Skills " + "(" + skillAvailableModelView.count + ")"
+            current: true
+            
+            onCurrentChanged: {
+                if(!current){
+                    p1.current = true
+                }
+            }
+            
+            Kirigami.CardsListView {
+                id: skillAvailableModelView
+                anchors.fill: parent
+                clip: true
+                model: skillsAvailableModel.contents
+                spacing: Kirigami.Units.smallSpacing
+                delegate: SkillDelegateAvailable{}
+            }
+        }
     }
     
      Popup {
