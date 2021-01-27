@@ -23,7 +23,7 @@ class SkillInstallerMobile(MycroftSkill):
     def __init__(self):
         super().__init__('SkillInstallerMobile')
         self.apps_white_list = ['youtube-skill.aiix', 'soundcloud-audio-player.aiix', 'skill-wikidata.aiix',
-                                'bitchute-skill.aiix', 'skystream.aiix', 'twitch-streams.aiix']
+                                'bitchute-skill.aiix', 'skystream.aiix', 'twitch-streams.aiix', 'food-wizard.aiix']
         self.skillInformation = {}
         self.skilllistmodel = []
         self.threads = []

@@ -93,7 +93,7 @@ Kirigami.AbstractCard {
                     anchors.centerIn: parent
                     width: Kirigami.Units.iconSizes.smallMedium
                     height: Kirigami.Units.iconSizes.smallMedium
-                    source: modelData.skillinstalled ? "images/remove.png" : "images/down.png"
+                    source: modelData.skillinstalled ? "images/trash-new.svg" : "images/down.png"
                 }
             }
             
